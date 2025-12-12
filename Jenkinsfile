@@ -11,3 +11,13 @@ pipeline {
         }
     }
 }
+stage ('Build & JUnit Test') {
+	steps {
+		sh 'mvn install' 
+	}
+	post {
+	    success {
+		   junit 'target/surefire-reports/**/*.xml'
+		} 
+	}
+}
