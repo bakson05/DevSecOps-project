@@ -9,3 +9,5 @@ pipeline {
                git branch: 'main', url: 'https://github.com/bakson05/DevSecOps-project.git'
             }
         }
+    }
+}
