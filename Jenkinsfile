@@ -47,6 +47,18 @@ pipeline {
 	sh ' trivy image --format template --template "@/usr/local/share/trivy/templates/html.tpl" -o report.html bakson05/sprint-boot-app:latest '
 	}
 }
+		stage('Docker Push') {
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'docker-hub-cred', 
+                                          usernameVariable: 'DOCKER_USER', 
+                                          passwordVariable: 'DOCKER_PASS')]) {
+            sh "docker login -u $DOCKER_USER -p $DOCKER_PASS"
+            sh "docker push bakson05/sprint-boot-app:v1.$BUILD_ID"
+            sh "docker push bakson05/sprint-boot-app:latest"
+            sh "docker rmi bakson05/sprint-boot-app:v1.$BUILD_ID bakson05/sprint-boot-app:latest"
+        }
+    }
+}
 
     }
 }
