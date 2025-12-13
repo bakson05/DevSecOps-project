@@ -9,7 +9,8 @@ pipeline {
 
         stage('Git Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/bakson05/DevSecOps-project.git'
+                git branch: 'main',
+                    url: 'https://github.com/bakson05/DevSecOps-project.git'
             }
         }
 
@@ -23,5 +24,17 @@ pipeline {
                 }
             }
         }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh 
+                        mvn clean verify sonar:sonar \
+                        -Dsonar.projectKey=devsecops-project-key \
+                        -Dsonar.login=Sonar
+                }
+            }
+        }
+
     }
 }
