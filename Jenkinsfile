@@ -42,6 +42,11 @@ pipeline {
         sh 'docker image tag bakson05/sprint-boot-app:v1.$BUILD_ID bakson05/sprint-boot-app:latest'
     }
 }
+        stage('Image Scan') {
+	steps {
+	sh ' trivy image --format template --template "@/usr/local/share/trivy/templates/html.tpl" -o report.html bakson05/sprint-boot-app:latest '
+	}
+}
 
     }
 }
