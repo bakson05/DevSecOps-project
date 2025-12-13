@@ -49,16 +49,17 @@ pipeline {
 }
 		stage('Docker Push') {
     steps {
-        withCredentials([usernamePassword(credentialsId: 'docker-hub-cred', 
-                                          usernameVariable: 'DOCKER_USER', 
-                                          passwordVariable: 'DOCKER_PASS')]) {
-            sh "docker login -u $DOCKER_USER -p $DOCKER_PASS"
-            sh "docker push bakson05/sprint-boot-app:v1.$BUILD_ID"
-            sh "docker push bakson05/sprint-boot-app:latest"
-            sh "docker rmi bakson05/sprint-boot-app:v1.$BUILD_ID bakson05/sprint-boot-app:latest"
+        withCredentials([usernamePassword(credentialsId: 'docker-hub-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+            sh """
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+            docker push bakson05/sprint-boot-app:v1.$BUILD_ID
+            docker push bakson05/sprint-boot-app:latest
+            docker rmi bakson05/sprint-boot-app:v1.$BUILD_ID bakson05/sprint-boot-app:latest
+            """
         }
     }
 }
+
 
     }
 }
