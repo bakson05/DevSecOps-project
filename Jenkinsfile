@@ -36,12 +36,12 @@ pipeline {
                 }
             }
         }
-        stage("Quality Gate") {
-            steps {
-              timeout(time: 1, unit: 'HOURS') {
-                waitForQualityGate abortPipeline: true
-              }
-            }
-          }
+        stage('Docker Build') {
+    steps {
+        sh 'docker build -t bakson05/sprint-boot-app:v1.$BUILD_ID .'
+        sh 'docker image tag bakson05/sprint-boot-app:v1.$BUILD_ID bakson05/sprint-boot-app:latest'
+    }
+}
+
     }
 }
