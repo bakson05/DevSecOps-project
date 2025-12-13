@@ -49,13 +49,16 @@ pipeline {
 }
 		stage('Docker Push') {
     steps {
-        withCredentials([usernamePassword(credentialsId: 'docker-hub-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-            sh """
-            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-            docker push bakson05/sprint-boot-app:v1.$BUILD_ID
-            docker push bakson05/sprint-boot-app:latest
-            docker rmi bakson05/sprint-boot-app:v1.$BUILD_ID bakson05/sprint-boot-app:latest
-            """
+        withCredentials([string(credentialsId: 'docker-hub-token', variable: 'DOCKER_PAT')]) {
+            // Connexion à Docker Hub avec le token
+            sh 'echo $DOCKER_PAT | docker login -u "cyberops2025@gmail.com" --password-stdin'
+            
+            // Push des images
+            sh 'docker push bakson05/sprint-boot-app:v1.$BUILD_ID'
+            sh 'docker push bakson05/sprint-boot-app:latest'
+            
+            // Supprimer les images locales après push
+            sh 'docker rmi bakson05/sprint-boot-app:v1.$BUILD_ID bakson05/sprint-boot-app:latest'
         }
     }
 }
