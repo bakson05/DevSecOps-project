@@ -47,21 +47,6 @@ pipeline {
 	sh ' trivy image --format template --template "@/usr/local/share/trivy/templates/html.tpl" -o report.html bakson05/sprint-boot-app:latest '
 	}
 }
-		stage('Docker Push') {
-    steps {
-        withCredentials([string(credentialsId: 'Docker_Hub_Jenkins', variable: 'DOCKER_PAT')]) {
-            // Connexion à Docker Hub avec le token
-            sh 'echo $DOCKER_PAT | docker login -u "cyberops2025@gmail.com" --password-stdin'
-            
-            // Push des images
-            sh 'docker push bakson05/sprint-boot-app:v1.$BUILD_ID'
-            sh 'docker push bakson05/sprint-boot-app:latest'
-            
-            // Supprimer les images locales après push
-            sh 'docker rmi bakson05/sprint-boot-app:v1.$BUILD_ID bakson05/sprint-boot-app:latest'
-        }
-    }
-}
 
 
     }
